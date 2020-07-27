@@ -55,7 +55,18 @@ void SelectionSort(int arr[], int N){
 // Insertion Sort
 
 void InsertionSort(int arr[], int N){
-
+	int hole, currentValue;
+	for(int i=1; i<N; i++){
+		currentValue = arr[i];
+		hole = i;
+		for(int j=i-1; j<N; j++){
+			while(hole > 0 && arr[hole-1] > currentValue){
+				arr[hole] = arr[hole-1];
+				hole--;
+			}
+		}
+		arr[hole] = currentValue;
+	}
 }
 
 
@@ -65,7 +76,7 @@ int main()
   	int arr[] = {12,21,5,351,98,122,39,87,53,90,17,68};
   	int size = sizeof(arr)/sizeof(arr[0]);
   	printArray(arr,size);
-  	SelectionSort(arr,size);
+  	InsertionSort(arr,size);
   	printArray(arr,size);
 	return 0;
 }
