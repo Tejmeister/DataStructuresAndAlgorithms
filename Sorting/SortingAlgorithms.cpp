@@ -70,13 +70,40 @@ void InsertionSort(int arr[], int N){
 }
 
 
+// Quick Sort
+// partition function
+int partition(int arr[], int start, int end){
+	int pivot = arr[end];
+	int pivot_index = start;
+	for(int j=start; j<end; j++){
+		if(arr[j] < pivot){
+			swap(arr[pivot_index], arr[j]);
+			pivot_index++;
+		}
+	}
+	swap(arr[end], arr[pivot_index]);
+
+	return pivot_index;
+}
+// sort function
+int QuickSort(int arr[], int start, int end){
+	int pivot_index;
+	if(start < end){
+		pivot_index = partition(arr,start,end);
+
+		QuickSort(arr,start,pivot_index-1);
+		QuickSort(arr,pivot_index+1,end);
+	}
+	return 0;
+}
+
 int main()
  {
 	//code
   	int arr[] = {12,21,5,351,98,122,39,87,53,90,17,68};
   	int size = sizeof(arr)/sizeof(arr[0]);
   	printArray(arr,size);
-  	InsertionSort(arr,size);
+  	QuickSort(arr,0,size-1);
   	printArray(arr,size);
 	return 0;
 }
