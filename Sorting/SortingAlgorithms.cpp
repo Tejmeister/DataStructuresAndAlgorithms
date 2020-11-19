@@ -69,6 +69,20 @@ void InsertionSort(int arr[], int N){
 	}
 }
 
+// Count number of passed in Bubble Sort
+
+void SwapsInBubbleSort(int arr[], int N){
+	int swaps = 0;
+	for(int i=0; i<N-1; i++){
+		for(int j=0; j<N-i-1; j++){
+			if(arr[j]>arr[j+1]){
+				swap(arr[j],arr[j+1]);
+				swaps++;
+			}
+		}
+	}
+	cout<<"Number of swaps: " <<swaps<<endl;
+}
 
 // Quick Sort
 // partition function
@@ -145,10 +159,11 @@ void MergeSort(int arr[], int l, int r){
 int main()
  {
 	//code
-  	int arr[] = {12,21,5,351,98,122,39,87,53,90,17,68};
+  	//int arr[] = {12,21,5,351,98,122,39,87,53,90,17,68};
+  	int arr[] = {8, 22, 7, 9, 31, 5, 13};
   	int size = sizeof(arr)/sizeof(arr[0]);
   	printArray(arr,size);
-  	MergeSort(arr,0,size-1);
+  	SwapsInBubbleSort(arr,size);
   	printArray(arr,size);
 	return 0;
 }
