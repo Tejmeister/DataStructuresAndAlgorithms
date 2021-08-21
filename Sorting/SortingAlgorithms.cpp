@@ -155,6 +155,69 @@ void MergeSort(int arr[], int l, int r){
 	}
 }
 
+// Count Inversion
+int countInversion(int arr[], int N){
+	int count = 0;
+	for(int i=0; i<N; i++){
+		for(int j=i+1; j<N; j++)
+			if(arr[i] > arr[j])
+				count++;
+	}
+
+	return count;
+}
+
+int inversionMerge(int arr[], int temp[], int start, int mid, int end){
+	int invCount = 0;
+
+	int i = start;
+	int j = mid;
+	int k = start;
+
+	while(i<mid && j<=end){
+		if(arr[i] < arr[j]){
+			temp[k++] = arr[i++];
+		}
+		else{
+			temp[k++] = arr[j++];
+
+			invCount = invCount + (mid - i);
+		}
+	}
+
+	while(i < mid){
+		temp[k++] = arr[i++];
+	}
+
+	while(j <= end){
+		temp[k++] = arr[j++];
+	}
+
+	for(i = start; i<=end; i++){
+		arr[i] = temp[i];
+	}
+
+	return invCount;
+}
+
+int inversionUsingMergeSort(int arr[], int temp[], int start, int end){
+	int mid, invCount = 0;
+	if(start < end){
+		mid = start + (end-start)/2;
+
+		invCount += inversionUsingMergeSort(arr, temp, start, mid);
+		invCount += inversionUsingMergeSort(arr, temp, mid+1, end);
+
+		invCount += inversionMerge(arr, temp, start, mid+1, end);
+	}
+
+	return invCount;
+}
+
+int countInversion2(int arr[], int N){
+	int temp[N];
+	inversionUsingMergeSort(arr, temp, 0, N-1);
+}
 
 int main()
  {
@@ -162,8 +225,8 @@ int main()
   	//int arr[] = {12,21,5,351,98,122,39,87,53,90,17,68};
   	int arr[] = {8, 22, 7, 9, 31, 5, 13};
   	int size = sizeof(arr)/sizeof(arr[0]);
-  	printArray(arr,size);
-  	SwapsInBubbleSort(arr,size);
-  	printArray(arr,size);
+
+  	cout<<countInversion2(arr, size);
+
 	return 0;
 }
