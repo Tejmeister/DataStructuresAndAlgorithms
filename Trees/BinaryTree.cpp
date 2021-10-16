@@ -464,6 +464,64 @@ TreeNode* deepCopy(TreeNode *root){
 	return temp;
 }
 
+int getHeight(TreeNode *root){
+	if(root == NULL)
+		return 0;
+	if(root->left == NULL && root->right == NULL)
+		return 1;
+	return 1 + max(getHeight(root->left), getHeight(root->right));
+}
+
+int diameter(TreeNode *root){
+	if(root == NULL)
+		return 0;
+	int leftHeight = getHeight(root->left);
+	int rightHeight = getHeight(root->right);
+
+	int leftDiameter = diameter(root->left);
+	int rightDiameter = diameter(root->right);
+
+	return max(leftHeight + rightHeight + 1, max(leftDiameter, rightDiameter));
+}
+
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+	// if current node is same as P or Q then return
+	if(root == p || root == q)
+		return root;
+	// if current node is leaf node return NULL
+	if(root->left == NULL && root->right == NULL)
+		return NULL;
+	
+	TreeNode *leftParent = NULL, *rightParent = NULL;
+	
+	// if left node present then search in left
+	if(root->left)
+		leftParent = lowestCommonAncestor(root->left, p, q);
+	// if right node present then search in right
+	if(root->right)
+		rightParent = lowestCommonAncestor(root->right, p, q);
+	
+	// if both parents are present then that element is your LCA
+	if(leftParent && rightParent)
+		return root;
+	
+	// else non null parent is the LCA
+	return leftParent ? leftParent : rightParent;
+}
+
+bool isMirror(TreeNode* root1, TreeNode* root2){
+	if(root1 == NULL && root2 == NULL)
+		return true;
+	if(root1 == NULL || root2 == NULL)
+		return false;
+	
+	return root1->val == root2->val && isMirror(root1->left, root2->right) && isMirror(root1->right, root2->left);
+}
+    
+bool isSymmetric(TreeNode* root) {
+	return isMirror(root, root);
+}
+
 int main(){
 	TreeNode* root = newNode(10); 
     root->left = newNode(11); 
@@ -484,6 +542,10 @@ int main(){
     vector<vector<int> > re;
     re = diagonalTraversal(root);
     printVector(re);
+
+	cout<<"Height: "<<getHeight(root)<<endl; 
+
+	cout<<"Diameter: "<<diameter(root)<<endl;
 
 	return 0;
 }
