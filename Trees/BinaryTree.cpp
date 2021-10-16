@@ -4,22 +4,24 @@ using namespace std;
 
 /* A binary tree node has key, pointer to left  
 child and a pointer to right child */
-struct TreeNode {
-	int val;
-	TreeNode *left;
-  	TreeNode *right;
- 	TreeNode() : val(0), left(NULL), right(NULL) {}
- 	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
-	TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+class TreeNode {
+	public:
+		int val;
+		TreeNode *left;
+		TreeNode *right;
+		TreeNode() : val(0), left(NULL), right(NULL) {}
+		TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+		TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  };
 
- struct TreeNodeWithDistance
+ class TreeNodeWithDistance
  {
- 	TreeNode *node;
- 	int hd;
- 	TreeNodeWithDistance() : hd(0), node(NULL) {}
- 	TreeNodeWithDistance(int x) : hd(x) {}
- 	TreeNodeWithDistance(TreeNode *n, int x) : node(n), hd(x) {}
+	public:
+		TreeNode *node;
+		int hd;
+		TreeNodeWithDistance() : hd(0), node(NULL) {}
+		TreeNodeWithDistance(int x) : hd(x) {}
+		TreeNodeWithDistance(TreeNode *n, int x) : node(n), hd(x) {}
  };
 
 void printVector(vector<int> v){
