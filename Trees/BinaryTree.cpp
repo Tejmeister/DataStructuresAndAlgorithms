@@ -305,12 +305,16 @@ void leftSideTraversal(TreeNode *root, vector<int>& result){
 		result.push_back(root->val);
 		leftSideTraversal(root->right, result);
 	}
+	// do nothing if it is a leaf node, this way we avoid
+    // duplicates in output
 }
 
 // rightSide traversal for boundary
 void rightSideTraversal(TreeNode *root, vector<int>& result){
 	if(root == NULL)
 		return;
+	// since we want the right side traversal in reverse order we first call the function recursively
+	// and then push in result vector
 	if(root->right){
 		rightSideTraversal(root->right, result);
 		result.push_back(root->val);
@@ -319,6 +323,8 @@ void rightSideTraversal(TreeNode *root, vector<int>& result){
 		rightSideTraversal(root->left, result);
 		result.push_back(root->val);
 	}
+	// do nothing if it is a leaf node, this way we avoid
+    // duplicates in output
 }
 
 // leaves traversal
