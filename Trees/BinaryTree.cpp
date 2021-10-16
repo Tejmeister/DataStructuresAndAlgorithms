@@ -45,9 +45,9 @@ void printVector(vector<vector<int> > v){
   
 /* function to create a new node of tree and  
 return pointer */
-struct TreeNode* newNode(int key) 
+TreeNode* newNode(int key) 
 { 
-    struct TreeNode* temp = new TreeNode(key); 
+	TreeNode* temp = new TreeNode(key); 
     temp->left = temp->right = NULL; 
     return temp; 
 };
@@ -354,7 +354,7 @@ vector<int> bottomView(TreeNode *root){
 		return result;
 	queue<TreeNodeWithDistance*> q;
 	unordered_map<int, int> m;
-	struct TreeNodeWithDistance *temp = new TreeNodeWithDistance(root, 0);
+	TreeNodeWithDistance *temp = new TreeNodeWithDistance(root, 0);
 
 	q.push(temp);
 
@@ -388,7 +388,7 @@ vector<int> topView(TreeNode *root){
 		return result;
 	queue<TreeNodeWithDistance*> q;
 	unordered_map<int, int> m;
-	struct TreeNodeWithDistance *temp = new TreeNodeWithDistance(root, 0);
+	TreeNodeWithDistance *temp = new TreeNodeWithDistance(root, 0);
 
 	q.push(temp);
 
@@ -459,7 +459,7 @@ TreeNode* deepCopy(TreeNode *root){
 }
 
 int main(){
-	struct TreeNode* root = newNode(10); 
+	TreeNode* root = newNode(10); 
     root->left = newNode(11); 
     root->left->left = newNode(7); 
     root->left->right = newNode(12);
