@@ -522,6 +522,54 @@ bool isSymmetric(TreeNode* root) {
 	return isMirror(root, root);
 }
 
+TreeNode* buildTreeHelperPre(vector<int>& preorder, vector<int>& inorder, int& rootIndex, unordered_map<int, int>& mp, int start, int end){
+	if(start > end)
+		return NULL;
+	
+	int rootValue = preorder[rootIndex++];
+	TreeNode *root = new TreeNode(rootValue);
+	
+	root->left = buildTreeHelperPre(preorder, inorder, rootIndex, mp, start, mp[rootValue]-1);
+	root->right = buildTreeHelperPre(preorder, inorder, rootIndex, mp, mp[rootValue]+1, end);
+	
+	return root;
+}
+
+TreeNode* buildTreePreIn(vector<int>& preorder, vector<int>& inorder) {
+	unordered_map<int, int> mp;
+	int rootIndex = 0;
+	
+	for(int i=0; i<inorder.size(); i++)
+		mp[inorder[i]] = i;
+	
+	return buildTreeHelperPre(preorder, inorder, rootIndex, mp, 0, inorder.size()-1);
+}
+
+TreeNode* buildTreeHelperPost(vector<int>& inorder, vector<int>& postorder, int& rootIndex, unordered_map<int, int>& mp,  int start, int end){
+	if(start > end)
+		return NULL;
+	
+	int rootVal = postorder[rootIndex--];
+	TreeNode* root = new TreeNode(rootVal);
+	
+	root->right = buildTreeHelperPost(inorder, postorder, rootIndex, mp, mp[rootVal]+1, end);
+	
+	root->left = buildTreeHelperPost(inorder, postorder, rootIndex, mp, start, mp[rootVal]-1);
+	
+	
+	return root;
+}
+
+TreeNode* buildTreePostIn(vector<int>& inorder, vector<int>& postorder) {
+	unordered_map<int, int> mp;
+	int rootIndex = postorder.size()-1;
+	
+	for(int i=0; i<inorder.size(); i++)
+		mp[inorder[i]] = i;
+	
+	return buildTreeHelperPost(inorder, postorder, rootIndex, mp, 0, inorder.size()-1);
+}
+
 int main(){
 	TreeNode* root = newNode(10); 
     root->left = newNode(11); 
