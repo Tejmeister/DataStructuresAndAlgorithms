@@ -97,12 +97,14 @@ int main()
 	g.addEdge(2, 3);
 	g.addEdge(3, 3);
 	
-	vector<int> v ;//= g.DFS(2);
-	//printVector(v);
-	
-	vector<int> visited(g.adj.size(), 0);
-	g.DFS(2, visited, v);
+	vector<int> v = g.DFS(2);
 	printVector(v);
+
+	vector<int> r;	
+
+	vector<int> visited(g.adj.size(), 0);
+	g.DFS(2, visited, r);
+	printVector(r);
 	
 	v = g.BFS(2);
 	printVector(v);
