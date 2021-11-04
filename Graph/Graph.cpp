@@ -4,14 +4,19 @@ using namespace std;
 
 class Graph {
 	public:
-	
+	int V;
 	unordered_map<int, vector<int>> adj;
 	
+	Graph(int V);
 	void addEdge(int start, int end);
 	vector<int> DFS(int startVertex);
 	vector<int> BFS(int startVertex);
 	void DFS(int startVertex, vector<int> &visited, vector<int>& result);
 };
+
+Graph::Graph(int V){
+    this->V = V;
+}
 
 void Graph::addEdge(int start, int end){
 	adj[start].push_back(end);
@@ -254,7 +259,7 @@ void topologicalSortUtil(int node, stack<int> &s, vector<int>& vis, Graph g){
 	s.push(node);
 }
 
-vector<int> topologicalSort(Graph g){
+vector<int> topologicalSortDFS(Graph g){
 	int V = g.adj.size();
 	vector<int> visited(V, 0);
 	stack<int> s;
@@ -271,18 +276,54 @@ vector<int> topologicalSort(Graph g){
 		result.push_back(s.top());
 		s.pop();
 	}
+
+	return result;
+}
+
+vector<int> topologicalSortBFS(Graph g){
+	int V = g.V;
+	cout<<V;
+	vector<int> indegree(V, 0);
+	for(int i=0; i<V; i++){
+		for(auto neighbor: g.adj[i])
+			indegree[neighbor]++;
+	}
+
+	queue<int> q;
+
+	for(int i=0; i<V; i++){
+		if(indegree[i] == 0)
+			q.push(i);
+	}
+
+	vector<int> result;
+
+	while(!q.empty()){
+		int current = q.front();
+		q.pop();
+
+		result.push_back(current);
+
+		for(auto neighbor: g.adj[current]){
+			if(--indegree[neighbor] == 0)
+				q.push(neighbor);
+		}
+	}
+
+	return result;
 }
 
 int main()
 {
-	Graph g;
-	g.addEdge(0, 1);
-	g.addEdge(0, 2);
-	g.addEdge(1, 2);
-	g.addEdge(3, 1);
-	g.addEdge(2, 1);
+	Graph g(6);
+	g.addEdge(5, 2);
+    g.addEdge(5, 0);
+    g.addEdge(4, 0);
+    g.addEdge(4, 1);
+    g.addEdge(2, 3);
+    g.addEdge(3, 1);
 	
-	vector<int> topo = topologicalSort(g);
+	vector<int> topo = topologicalSortBFS(g);
 
 	printVector(topo);
 	
