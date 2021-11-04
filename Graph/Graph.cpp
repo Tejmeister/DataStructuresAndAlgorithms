@@ -15,7 +15,8 @@ class Graph {
 
 void Graph::addEdge(int start, int end){
 	adj[start].push_back(end);
-	adj[end].push_back(start);
+	// uncomment for undirected graph
+	//adj[end].push_back(start);
 }
 
 void Graph::DFS(int v, vector<int> &visited, vector<int> &result)
@@ -89,7 +90,6 @@ void printVector(vector<int> v){
 	cout<<"]"<<endl;
 }
 
-// BFS
 bool checkForUGCycleBFS(int s, int V, vector<int>& visited, Graph g)
     {
         vector<int> parent(V, -1);
@@ -165,15 +165,95 @@ bool isUGCycleBFS(Graph g){
 	return false;
 }
 
+bool checkForDGCycleDFS(int node, vector<int>& dfsVis, vector<int>& vis, Graph g){
+	vis[node] = 1;
+	dfsVis[node] = 1;
+	for(auto neighbour : g.adj[node]){
+		if(!vis[neighbour]){
+			if(checkForDGCycleDFS(neighbour, dfsVis, vis, g))
+				return true;
+		}
+		else{
+			if(dfsVis[neighbour])
+				return true;
+		}
+	}
+	dfsVis[node] = 0;
+
+	return false;
+}
+
+bool isDGCycleDFS(Graph g){
+    int V = g.adj.size();
+
+	vector<int> visited(V, 0);
+	vector<int> dfsVisited(V, 0);
+
+	for(int i=0; i<V; i++){
+		if(!visited[i]){
+			if(checkForDGCycleDFS(i, dfsVisited, visited, g))
+			    return true;
+		}
+	}
+	
+	return false;
+}
+
+// Using Kahn's algorithm of topological sort
+bool isDGCycleBFS(int V, Graph g){
+    
+    // Queue for BFS
+    queue<int> q;
+    
+    // indegree for Kahn's algorithm
+    vector<int> indegree(V, 0);
+    
+    for(int i=0; i <V; i++){
+        for(auto node: g.adj[i]){
+            indegree[node]++;
+        }
+    }
+    
+    // put nodes with indegree = 0 in queue
+    for(int i=0; i<V; i++){
+        if(indegree[i] == 0)
+            q.push(i);
+    }
+    
+    // init count
+    // if final count is equal to total nodes then there is no cycle 
+    
+    int count = 0;
+    
+    while(!q.empty()){
+        int node = q.front();
+        q.pop();
+        
+        count++;
+        
+        for(auto neighbour: g.adj[node]){
+            if(--indegree[neighbour] == 0)
+                q.push(neighbour);
+        }
+    }
+
+    if(count == V)
+        return false;
+        
+    return true;
+}
+
 int main()
 {
 	Graph g;
 	g.addEdge(0, 1);
 	g.addEdge(0, 2);
-	//g.addEdge(1, 2);
-	//g.addEdge(2, 0);
+	g.addEdge(1, 2);
+	//g.addEdge(3, 1);
 	g.addEdge(2, 3);
 	
-	cout<<isUGCycleBFS(g);
+	int V = 4;
+	
+	cout<<isDGCycleBFS(V, g);
 	return 0;
 }
