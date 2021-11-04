@@ -15,6 +15,7 @@ class Graph {
 
 void Graph::addEdge(int start, int end){
 	adj[start].push_back(end);
+	adj[end].push_back(start);
 }
 
 void Graph::DFS(int v, vector<int> &visited, vector<int> &result)
@@ -79,6 +80,7 @@ vector<int> Graph :: BFS(int startVertex){
 	return result;
 }
 
+
 void printVector(vector<int> v){
 	cout<<"[";
 	for(int i=0; i<v.size(); i++){
@@ -87,28 +89,91 @@ void printVector(vector<int> v){
 	cout<<"]"<<endl;
 }
 
+// BFS
+bool checkForUGCycleBFS(int s, int V, vector<int>& visited, Graph g)
+    {
+        vector<int> parent(V, -1);
+     
+        // Create a queue for BFS
+        queue<pair<int,int>> q;
+     
+        visited[s] = true;
+        q.push({s, -1});
+     
+        while (!q.empty()) {
+     
+            int node = q.front().first;
+            int par = q.front().second;
+            q.pop();
+     
+            for (auto it : g.adj[node]) {
+                if (!visited[it]) {
+                    visited[it] = true;
+                    q.push({it, node});
+                }
+                else if (par != it)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+// DFS
+bool checkForUGCycleDFS(int node, int parent, vector<int>& vis, Graph g){
+	vis[node] = 1;
+	for(auto neighbour : g.adj[node]){
+		if(!vis[neighbour]){
+			if(checkForUGCycleDFS(neighbour, node, vis, g))
+				return true;
+		}
+		else{
+			if(neighbour != parent)
+				return true;
+		}
+	}
+
+	return false;
+}
+
+bool isUGCycleDFS(Graph g){
+	int V = g.adj.size();
+
+	vector<int> visited(V+1, 0);
+
+	for(int i=0; i<V; i++){
+		if(!visited[i]){
+			if(checkForUGCycleDFS(i, -1, visited, g))
+			    return true;
+		}
+	}
+	
+	return false;
+}
+
+bool isUGCycleBFS(Graph g){
+	int V = g.adj.size();
+
+	vector<int> visited(V+1, 0);
+
+	for(int i=0; i<V; i++){
+		if(!visited[i]){
+			if(checkForUGCycleBFS(i, g.adj.size(), visited, g))
+			    return true;
+		}
+	}
+	
+	return false;
+}
+
 int main()
 {
 	Graph g;
 	g.addEdge(0, 1);
 	g.addEdge(0, 2);
-	g.addEdge(1, 2);
-	g.addEdge(2, 0);
+	//g.addEdge(1, 2);
+	//g.addEdge(2, 0);
 	g.addEdge(2, 3);
-	g.addEdge(3, 3);
 	
-	vector<int> v = g.DFS(2);
-	printVector(v);
-
-	vector<int> r;	
-
-	vector<int> visited(g.adj.size(), 0);
-	g.DFS(2, visited, r);
-	printVector(r);
-	
-	v = g.BFS(2);
-	printVector(v);
-
-	// For traversing all the disconnected components start DFS/BFS from all the unvisited nodes
+	cout<<isUGCycleBFS(g);
 	return 0;
 }
