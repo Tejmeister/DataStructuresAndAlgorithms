@@ -21,7 +21,7 @@ Graph::Graph(int V){
 void Graph::addEdge(int start, int end){
 	adj[start].push_back(end);
 	// uncomment for undirected graph
-	//adj[end].push_back(start);
+	adj[end].push_back(start);
 }
 
 void Graph::DFS(int v, vector<int> &visited, vector<int> &result)
@@ -313,19 +313,96 @@ vector<int> topologicalSortBFS(Graph g){
 	return result;
 }
 
+bool isBipartiteBFSUtil(int node, vector<int>& color, Graph g){
+    queue<int> q;
+    q.push(node);
+    
+    color[node] = 1;
+    
+    while(!q.empty()){
+        int curr = q.front();
+        q.pop();
+        
+        for(int neighbor: g.adj[curr]){
+            if(color[neighbor] == -1){
+                color[neighbor] = 1 - color[curr];
+                q.push(neighbor);
+            }
+            else if(color[neighbor] == color[curr]){
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+bool isBipartiteBFS(Graph g){
+    int V = g.V;
+    vector<int> color(V, -1);
+    
+    for(int i=0; i<V; i++){
+        if(color[i] == -1){
+            if(!isBipartiteBFSUtil(i, color, g))
+                return false;
+        }
+    }
+    return true;
+}
+
 int main()
 {
-	Graph g(6);
-	g.addEdge(5, 2);
-    g.addEdge(5, 0);
-    g.addEdge(4, 0);
-    g.addEdge(4, 1);
-    g.addEdge(2, 3);
-    g.addEdge(3, 1);
-	
-	vector<int> topo = topologicalSortBFS(g);
+    
+	Graph g(9);   
+    // Biparatite eg.
+    /*    
+        8 7 
+        0 1 
+        1 2 
+        2 3 
+        3 4 
+        4 6 
+        6 7 
+        1 7
+        4 5 
+    */
 
-	printVector(topo);
+    g.addEdge(8, 7);
+    g.addEdge(0, 1);
+    g.addEdge(1, 2);
+    g.addEdge(2, 3);
+    g.addEdge(3, 4);
+    g.addEdge(4, 6);
+    g.addEdge(6, 7);
+    g.addEdge(1, 7);
+    g.addEdge(4, 5);
+	
+    cout<<isBipartiteBFS(g);	
+	
+	// Non-Biparatite eg.
+    /*    
+        8 7 
+        0 1 
+        1 2 
+        2 3 
+        3 4 
+        4 6 
+        6 7 
+        1 7
+        4 5 
+    */
+    Graph nbg(7);
+    
+    nbg.addEdge(7, 7);
+    nbg.addEdge(0, 1);
+    nbg.addEdge(1, 2);
+    nbg.addEdge(2, 3);
+    nbg.addEdge(3, 4);
+    nbg.addEdge(4, 6);
+    nbg.addEdge(6, 1);
+    nbg.addEdge(4, 5);
+	
+    cout<<isBipartiteBFS(nbg);
 	
 	return 0;
 }
