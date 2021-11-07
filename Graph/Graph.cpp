@@ -350,6 +350,37 @@ bool isBipartiteBFS(Graph g){
     return true;
 }
 
+bool isBipartiteDFSUtil(int node, vector<int>& color, Graph g){
+    for(int neighbor: g.adj[node]){
+        if(color[neighbor] == -1){
+            color[neighbor] = 1 - color[node];
+            if(!isBipartiteDFSUtil(neighbor, color, g)){
+                return false;
+            }
+        }
+        else if(color[neighbor] == color[node]){
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+bool isBipartiteDFS(Graph g){
+    int V = g.V;
+    vector<int> color(V, -1);\
+    
+    for(int i=0; i<V; i++){
+        if(color[i] == -1){
+            color[i] = 1;
+            if(!isBipartiteDFSUtil(i, color, g))
+                return false;
+        }
+    }
+    
+    return true;
+}
+
 int main()
 {
     
@@ -377,7 +408,7 @@ int main()
     g.addEdge(1, 7);
     g.addEdge(4, 5);
 	
-    cout<<isBipartiteBFS(g);	
+    cout<<isBipartiteDFS(g);	
 	
 	// Non-Biparatite eg.
     /*    
@@ -402,7 +433,7 @@ int main()
     nbg.addEdge(6, 1);
     nbg.addEdge(4, 5);
 	
-    cout<<isBipartiteBFS(nbg);
+    cout<<isBipartiteDFS(nbg);
 	
 	return 0;
 }
