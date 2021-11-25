@@ -359,6 +359,8 @@ vector<int> bottomView(TreeNode *root){
 	if(root == NULL)
 		return result;
 	queue<TreeNodeWithDistance*> q;
+
+	// horizontal distance -> node.val
 	unordered_map<int, int> m;
 	TreeNodeWithDistance *temp = new TreeNodeWithDistance(root, 0);
 
